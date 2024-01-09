@@ -1,37 +1,22 @@
 FROM python:3.10-buster
 
-# Install dependencies including Git and Gettext
-RUN apt-get update && apt-get install -y \
-    git \
-    nano \
-    gettext \
-    sudo \
-    vim \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    python-dev \
-    libpcap-dev && \
-    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Download cache lists and install minimal versions
+RUN apt-get update && apt-get -yq install --no-install-recommends \
+    sudo vim build-essential libssl-dev libffi-dev python-dev libpcap-dev && \
+    apt-get autoremove -yq && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Clone OpenCanary repository
-RUN git clone https://github.com/thinkst/opencanary.git /opencanary
+# Install required pip dependencies
+RUN pip install opencanary scapy pcapy-ng
 
-# Set working directory
-WORKDIR /opencanary
+# Copy config file across
+COPY opencanary.conf /root/.opencanary.conf
 
-# Install Python dependencies
-RUN pip install -r requirements.txt
-RUN pip install scapy pcapy-ng
+# Copy the Python script for updating the configuration
+COPY update_config.py /update_config.py
 
-# Copy the modified opencanary.conf with placeholders
-COPY opencanary.conf /opencanary/opencanary.conf.template
+# Set the default application we are running
+ENTRYPOINT ["python", "/update_config.py"]
+#ENTRYPOINT [ "opencanaryd" ]
 
-# Copy the entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-
-# Make the script executable
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+# Set the default arguments to be used for the entrypoint
 CMD ["--dev"]
