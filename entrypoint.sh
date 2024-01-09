@@ -1,18 +1,15 @@
 #!/bin/bash
 
-# Check if the opencanary.conf file exists
+# Path to the configuration template and final configuration
+CONF_TEMPLATE="/opencanary/opencanary.conf.template"
 CONF_FILE="/opencanary/opencanary.conf"
-if [ ! -f "$CONF_FILE" ]; then
-    echo "Error: Configuration file not found: $CONF_FILE"
-    exit 1
-fi
 
-# Substitute environment variables in the opencanary.conf file
-envsubst < "$CONF_FILE" > "${CONF_FILE}.tmp"
-mv "${CONF_FILE}.tmp" "$CONF_FILE"
+# Substitute placeholders with environment variable values
+envsubst < "$CONF_TEMPLATE" > "$CONF_FILE"
 
 # Ensure permissions are correct
 chmod 644 "$CONF_FILE"
 
 # Start OpenCanary
+cat "$CONF_FILE"  # Add this line for debugging
 exec opencanaryd "$@"

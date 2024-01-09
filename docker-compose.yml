@@ -4,15 +4,15 @@ services:
     container_name: TrapLogger
     build: .
     environment:
-      # SMTP details for email alerts
-      # SMTP_HOST: smtp.example.com
-      # SMTP_PORT: 587
-      # SMTP_USERNAME: user@example.com
-      # SMTP_PASSWORD: your_password
-      # SMTP_USE_TLS: "true"
+      #SMTP details for email alerts
+      SMTP_HOST: #smtp.example.com
+      SMTP_PORT: #587
+      SMTP_USERNAME: #user@example.com
+      SMTP_PASSWORD: #your_password
+      SMTP_USE_TLS: #"true"
       # EMAIL details
-      # EMAIL_FROM: alerts@example.com
-      # EMAIL_TO: helpdesk@example.com
+      EMAIL_FROM: #alerts@example.com
+      EMAIL_TO: #helpdesk@example.com
     ports:
       # Comment/un-comment the port lines below to disable/enable the services you are using
       # FTP
